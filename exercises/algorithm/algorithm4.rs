@@ -50,13 +50,32 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        match self.root {
+            None => {
+                self.root = Some(Box::new(TreeNode::new(value)));
+            }
+            Some(ref mut node) => {
+                node.insert(value);
+            }
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        //TODO
-        true
+        self.search_node(&self.root, value)
+    }
+
+    fn search_node(&self, node: &Option<Box<TreeNode<T>>>, value: T) -> bool {
+        match node {
+            None => false,
+            Some(n) => {
+                match value.cmp(&n.value) {
+                    Ordering::Equal => true,
+                    Ordering::Less => self.search_node(&n.left, value),
+                    Ordering::Greater => self.search_node(&n.right, value),
+                }
+            }
+        }
     }
 }
 
@@ -66,7 +85,31 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
-        //TODO
+        match value.cmp(&self.value) {
+            Ordering::Less => {
+                match self.left {
+                    None => {
+                        self.left = Some(Box::new(TreeNode::new(value)));
+                    }
+                    Some(ref mut node) => {
+                        node.insert(value);
+                    }
+                }
+            }
+            Ordering::Greater => {
+                match self.right {
+                    None => {
+                        self.right = Some(Box::new(TreeNode::new(value)));
+                    }
+                    Some(ref mut node) => {
+                        node.insert(value);
+                    }
+                }
+            }
+            Ordering::Equal => {
+                // 重复值不插入
+            }
+        }
     }
 }
 
